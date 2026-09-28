@@ -1,0 +1,226 @@
+/* ==========================================================
+   スマホ・タッチ端末向けのレイアウト上書き
+   （PC向けの基本スタイルは index.css。ここでは画面幅・入力方式に応じて上書きする）
+   ========================================================== */
+
+/* タッチ端末：ホバー演出を無効化（タップ後に浮いたまま残るのを防ぐ） */
+@media (hover: none) {
+  .part-card:hover:not(:disabled) { transform: none; box-shadow: none; border-color: #2a6b45; }
+  .part-card:active:not(:disabled) { transform: scale(0.98); border-color: #f0b74a; }
+}
+
+/* ---------- スマホレイアウト（幅640px以下） ---------- */
+@media (max-width: 640px) {
+  #root {
+    padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
+    padding-left: max(10px, env(safe-area-inset-left));
+    padding-right: max(10px, env(safe-area-inset-right));
+  }
+
+  /* 共通パーツ：タップしやすいサイズに */
+  button { min-height: 42px; padding: 9px 14px; font-size: 14px; }
+  button.primary { font-size: 15px; }
+  select { min-height: 44px; font-size: 16px; padding: 8px 10px; } /* 16px未満だとiOSで入力時に自動ズームされる */
+  input[type="checkbox"] { width: 20px; height: 20px; }
+  .card { padding: 12px; margin-bottom: 12px; }
+  .card h2 { font-size: 15px; line-height: 1.45; }
+  .sub { line-height: 1.6; }
+  .card .sub, .card p { font-size: 13px; }
+  .footer-note { margin-top: 14px; padding-bottom: 8px; }
+
+  /* ヘッダー：上部固定のコンパクトバー＋開閉メニュー */
+  .app-header {
+    position: sticky; top: 0; z-index: 30;
+    display: block;
+    margin: -10px -10px 12px;
+    padding: calc(8px + env(safe-area-inset-top)) 12px 8px;
+    border-radius: 0 0 14px 14px;
+    background: rgba(18, 51, 34, 0.96);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    border-bottom: 1px solid #1f5236;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  }
+  .app-header .title {
+    font-size: 13px; letter-spacing: 0.02em;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .app-header .title-brand, .app-header .sub-detail { display: none; }
+  .app-header .sub { font-size: 11px; margin-top: 2px; }
+  .menu-toggle {
+    display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
+    min-height: 38px; padding: 6px 12px; font-size: 13px;
+  }
+  .menu-icon { display: inline-flex; flex-direction: column; gap: 3px; width: 14px; }
+  .menu-icon span { display: block; height: 2px; border-radius: 1px; background: currentColor; transition: transform 0.2s, opacity 0.2s; }
+  .app-header.menu-open .menu-icon span:nth-child(1) { transform: translateY(5px) rotate(45deg); }
+  .app-header.menu-open .menu-icon span:nth-child(2) { opacity: 0; }
+  .app-header.menu-open .menu-icon span:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
+  .header-actions { display: none; }
+  .app-header.menu-open .header-actions {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    margin-top: 10px; padding-top: 10px; border-top: 1px solid #1f5236;
+    animation: menu-drop 0.18s ease-out;
+  }
+  .header-actions button { width: 100%; font-size: 13px; }
+  .header-actions button.danger { grid-column: 1 / -1; }
+
+  /* 画面下の決定ボタン：スクロールしても常に押せるよう下部に固定 */
+  .action-footer {
+    position: sticky; bottom: 0; z-index: 6;
+    margin: 14px -12px -12px;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    background: rgba(18, 51, 34, 0.97);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    border-top: 1px solid #1f5236;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 -6px 14px rgba(0, 0, 0, 0.3);
+  }
+  .action-footer > button { flex: 1 1 auto; }
+  .action-footer > button.primary { flex: 1 1 100%; order: 2; }
+  .action-footer-note { font-size: 14px; }
+
+  .toolbar { gap: 6px; }
+  .toolbar > button { flex: 1 1 auto; font-size: 13px; padding: 8px 10px; }
+  .toolbar-divider { display: none; }
+  .segmented { flex: 1 1 100%; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; }
+  .segmented button { padding: 8px 4px; font-size: 13px; }
+
+  /* タイトル画面：部カードを横長のリスト型に */
+  .title-screen { min-height: calc(100vh - 20px); min-height: calc(100dvh - 20px); border-radius: 14px; }
+  .title-inner { padding: 30px 14px 24px; gap: 24px; }
+  .title-logo-sub { font-size: 10px; letter-spacing: 0.25em; }
+  .part-select-grid { gap: 10px; }
+  .part-card {
+    display: grid; grid-template-columns: 48px 1fr; column-gap: 14px; row-gap: 2px;
+    align-items: center; text-align: left; padding: 14px;
+  }
+  .part-card > * { grid-column: 2; }
+  .part-card > .part-icon { grid-column: 1; grid-row: 1 / span 3; margin: 0; width: 44px; height: 44px; }
+  .part-card-name { font-size: 17px; }
+  .part-card-tagline { min-height: 0; }
+  .part-card-lock { align-items: flex-start; margin-top: 4px; }
+
+  /* 各部ホーム画面 */
+  .home-screen { margin: 8px auto; gap: 12px; }
+  .home-hero { padding: 20px 16px; }
+  .home-hero-title { font-size: 20px; }
+  .home-stat-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .home-stat { padding: 10px 8px; }
+  .home-stat-value { font-size: 17px; }
+  .home-actions { flex-direction: column; }
+  .home-actions button { width: 100%; }
+  button.primary.large { padding: 14px 20px; font-size: 16px; }
+
+  /* 中学選択・セーブ選択 */
+  .school-grid { grid-template-columns: 1fr; gap: 10px; }
+  .school-card .school-tagline { min-height: 0; }
+  .school-card button { margin-top: 4px; }
+  .page-back button { width: 100%; }
+
+  /* 選手チップ類：2列固定 */
+  .pair-select-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  .chip { padding: 8px; }
+  .chip .chip-name { font-size: 13px; line-height: 1.35; }
+  .chip .chip-sub { line-height: 1.4; }
+  /* ステータス画面の選手切り替えは横スクロールの帯に */
+  .pair-select-grid.player-picker {
+    display: flex; overflow-x: auto; gap: 6px; padding-bottom: 6px;
+    margin-left: -12px; margin-right: -12px; padding-left: 12px; padding-right: 12px;
+    scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch;
+  }
+  .player-picker .chip { flex: 0 0 132px; scroll-snap-align: start; }
+
+  /* リーグ振り分け */
+  .league-board { grid-template-columns: 1fr; gap: 8px; }
+  .player-token { padding: 4px 10px 4px 4px; font-size: 13px; min-height: 34px; }
+  .player-token .rank-dot { width: 24px; height: 24px; font-size: 11px; }
+  .league-column { min-height: 64px; }
+
+  /* オーダー編成 */
+  .lineup-grid { grid-template-columns: 1fr; gap: 10px; }
+
+  /* 相性リスト：狭い画面では2段組みに */
+  .affinity-row { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; padding: 8px 10px; }
+  .affinity-row .affinity-name { width: auto; grid-row: 1; grid-column: 1; font-weight: bold; }
+  .affinity-row .affinity-score { width: auto; grid-row: 1; grid-column: 2; }
+  .affinity-row .affinity-reason { width: auto; grid-column: 1 / -1; }
+  .affinity-row .bar-track { grid-column: 1 / -1; }
+  /* 採用ボタンがある行は、理由の右横にボタンを置く */
+  .affinity-row:has(> button) .affinity-reason { grid-column: 1; }
+  .affinity-row > button { grid-column: 2; grid-row: 2; min-height: 36px; padding: 6px 16px; align-self: center; }
+
+  /* 試合画面：対戦パネルは左右並びのままコンパクトに */
+  .battle-arena { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .combatant-panel { padding: 8px; min-width: 0; }
+  .combatant-panel h3 { font-size: 12px; line-height: 1.4; word-break: break-all; }
+  .combatant-panel .bar-wrap { font-size: 10px; gap: 4px; }
+  .combatant-panel .bar-wrap .label { width: 50px; letter-spacing: -0.02em; }
+  .combatant-panel .bar-wrap > span:last-child { width: 20px; text-align: right; }
+  .score-board { font-size: 17px; margin: 6px 0; }
+  .battle-log { max-height: 190px; }
+  .cutin-overlay { position: fixed; border-radius: 0; z-index: 40; }
+  .cutin-kind { font-size: 24px; }
+
+  /* ステータス・結果一覧 */
+  .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 4px 14px; }
+  .bar-wrap .label { width: 84px; }
+  .card h3 { font-size: 14px; }
+  .detail-grid { gap: 0; }
+  .select-item { gap: 8px; flex-wrap: wrap; padding: 10px; font-size: 13px; }
+  .stage-chip { font-size: 11px; }
+
+  /* 部員一覧：表をカード型に組み替える */
+  .roster-table, .roster-table tbody { display: block; }
+  .roster-table thead { display: none; }
+  .roster-table tr.roster-main {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px 8px;
+    background: #0f281b; border: 1px solid #1a3d28; border-bottom: none;
+    border-radius: 10px 10px 0 0; padding: 10px 10px 8px; margin-top: 10px;
+  }
+  .roster-table tr.roster-main td { display: block; padding: 0; border: none; font-size: 13px; }
+  .roster-table tr.roster-main td[data-label]::before {
+    content: attr(data-label); display: block; font-size: 10px; color: #9fd8b6; margin-bottom: 1px;
+  }
+  .roster-table td.rc-name { grid-column: 1 / -1; order: -2; font-size: 15px; font-weight: bold; color: #f0c96a; }
+  .roster-table td.rc-style { grid-column: span 2; order: 1; }
+  .roster-table td.rc-skills, .roster-table td.rc-record { order: 1; }
+  .roster-table td.rc-state { grid-column: 1 / -1; order: 2; }
+  .roster-table td.rc-action { grid-column: 1 / -1; order: 10; }
+  .roster-table td.rc-action button { width: 100%; min-height: 38px; }
+  .roster-table tr.roster-sub { display: block; }
+  .roster-table tr.roster-sub td {
+    display: block; padding: 0 10px 8px !important;
+    background: #0f281b; border: 1px solid #1a3d28 !important; border-top: none !important;
+    border-radius: 0 0 10px 10px;
+  }
+  .roster-table tr.roster-sub summary { padding: 8px 0 4px; }
+
+  /* モーダル：下からせり上がるシート型 */
+  .modal-backdrop { align-items: flex-end; padding: 0; z-index: 50; }
+  .modal-box h2 { font-size: 17px; color: #f0c96a; }
+  .modal-box > div:last-child button { width: 100%; }
+  .modal-box {
+    border-radius: 16px 16px 0 0; max-height: 88vh; max-height: 88dvh;
+    padding: 16px 14px calc(16px + env(safe-area-inset-bottom));
+    animation: sheet-up 0.22s ease-out;
+  }
+  .vault-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .vault-card { padding: 8px; font-size: 13px; }
+}
+
+@media (max-width: 360px) {
+  .pair-select-grid, .vault-grid { grid-template-columns: 1fr; }
+  .header-actions button { font-size: 12px; }
+}
+
+@keyframes menu-drop {
+  0% { opacity: 0; transform: translateY(-6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes sheet-up {
+  0% { transform: translateY(40px); opacity: 0.6; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-header.menu-open .header-actions, .modal-box { animation: none; }
+}
